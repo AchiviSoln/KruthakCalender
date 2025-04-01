@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>April-December 2025 Calendar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .calendar-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            /* Gradient background, shadow, and rounded corners */
+            background: linear-gradient(135deg, #e0f2fe, #f0f4f8);
+            border-radius: 1rem;
+            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.15), 0 3px 7px -2px rgba(0, 0, 0, 0.07);
+            position: relative;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .month-navigation button {
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            background-color: #d1d8e3;
+            color: #334155;
+            cursor: pointer;
+            border: 1px solid #cbd5e0;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .month-navigation button:hover {
+            background-color: #a3b1c3;
+            border-color: #a3b1c3;
+            transform: scale(1.05);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+        .month-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+        .day-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .day {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 3rem;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            color: #2d3748;
+            font-size: 1.2rem;
+            border: 1px solid #edf2f7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .day:hover {
+            background-color: #f0f4f8;
+            transform: scale(1.05);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+        .day.workingday {
+            background-color: #e0f7fa;
+            color: #1a202c;
+        }
+        .day.weekend {
+            background-color: #f56565;
+            color: #ffffff;
+            border-color: #f56565;
+        }
+        .day.leave {
+            background-color: #f56565;
+            color: #ffffff;
+            border-color: #f56565;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .day.today {
+            background-color: #c6f6d5;
+            color: #1a5235;
+            font-weight: 600;
+            border: 2px solid #6ee7b7;
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background-color: #68d391;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .notes-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.75rem;
+            border: 1px solid #cbd5e0;
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .notes-container p {
+            margin-bottom: 0.5rem;
+        }
+        .notes-container strong {
+            color: #1a202c;
+        }
+        .christmas {
+            background-color: #fcd34d;
+            color: #1a202c;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        .logo {
+            max-width: 150px;
+            max-height: 100px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="calendar-container">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Kruthak Technology Holiday Calender for 2025</h1>
+        <div class="calendar-header">
+            <div class="month-navigation">
+                <button id="prev-month">❮</button>
+                <span id="month-name" class="month-name">Month</span>
+                <button id="next-month">❯</button>
+            </div>
+        </div>
+        <div class="calendar-grid">
+            <div class="day-name">Sun</div>
+            <div class="day-name">Mon</div>
+            <div class="day-name">Tue</div>
+            <div class="day-name">Wed</div>
+            <div class="day-name">Thu</div>
+            <div class="day-name">Fri</div>
+            <div class="day-name">Sat</div>
+        </div>
+        <div id="notes" class="notes-container"></div>
+        <div class="logo-container">
+            <img src="Kruthak.png" alt="Company Logo" class="logo">
+        </div>
+    </div>
+
+    <script>
+        const calendarGrid = document.querySelector('.calendar-grid');
+        const monthName = document.getElementById('month-name');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const notesContainer = document.getElementById('notes');
+
+        let currentDate = new Date(2025, 3, 1);
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        const endMonth = 11;
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const weekends = [0];
+        const leaves = ['2025-05-01', '2025-08-15', '2025-08-27', '2025-08-28', '2025-09-30', '2025-10-01', '2025-10-02', '2025-10-20', '2025-11-01', '2025-12-25'];
+        const events = {
+            '2025-05-01': { title: 'Labour\'s Day' },
+            '2025-08-09': { title: 'Rakshabandhan'},
+            '2025-08-15': { title: 'Independence Day' },
+            '2025-08-27': { title: 'Ganesh Chaturthi' },
+            '2025-08-28': { title: 'Rushi Panchami' },
+            '2025-09-30': { title: 'Durga Ashtami' },
+            '2025-10-01': { title: 'Navami' },
+            '2025-10-02': { title: 'Dashami' },
+            '2025-10-20': { title: 'Lakshmi Pooja' },
+            '2025-11-01': { title: 'Karnataka Rajyotsava' },
+            '2025-12-25': { title: 'Christmas' }
+        };
+
+        function generateCalendar(month, year) {
+            calendarGrid.innerHTML = `<div class="day-name">Sun</div>
+                                    <div class="day-name">Mon</div>
+                                    <div class="day-name">Tue</div>
+                                    <div class="day-name">Wed</div>
+                                    <div class="day-name">Thu</div>
+                                    <div class="day-name">Fri</div>
+                                    <div class="day-name">Sat</div>`;
+
+            monthName.textContent = `${monthNames[month]} ${year}`;
+            const firstDay = new Date(year, month, 1).getDay();
+            const days = (month === 1 && (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0)) ? 29 : daysInMonth[month];
+
+            let saturdayCount = 0;
+            let weekCount = 0;
+            for (let i = 0; i < firstDay; i++) {
+                calendarGrid.innerHTML += `<div class="day"></div>`;
+            }
+
+            for (let day = 1; day <= days; day++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = new Date(dateString).getDay();
+                let isSecondOrFourthSaturday = false;
+                let isIndependenceDay = dateString === '2025-08-15';
+                let isGaneshChaturthi = dateString === '2025-08-27';
+                let isRushiPanchami = dateString === '2025-08-28';
+                let isRakshabandhan = dateString === '2025-08-09';
+                let isDurgaAshtami = dateString === '2025-09-30';
+                let isNavami = dateString === '2025-10-01';
+                let isDashami = dateString === '2025-10-02';
+                let isLakshmiPooja = dateString === '2025-10-20';
+                let isKarnatakaRajyotsava = dateString === '2025-11-01';
+                let isChristmas = dateString === '2025-12-25';
+
+
+                if (dayOfWeek === 6) {
+                    saturdayCount++;
+                    if (saturdayCount === 2 || saturdayCount === 4) {
+                        isSecondOrFourthSaturday = true;
+                    }
+                }
+
+                let dayContent = `<div class="day ${isSecondOrFourthSaturday || dayOfWeek === 0 ? 'weekend' : (dayOfWeek !== 0 ? 'workingday' : '')} ${isLeave(dateString) ? 'leave' : ''} ${isToday(dateString) ? 'today' : ''} ${isIndependenceDay ? 'independence-day' : ''} ${isGaneshChaturthi ? 'ganesh-chaturthi' : ''} ${isRushiPanchami ? 'ganesh-chaturthi' : ''} ${isRakshabandhan ? 'ganesh-chaturthi' : ''} ${isDurgaAshtami ? 'ganesh-chaturthi' : ''} ${isNavami ? 'ganesh-chaturthi': ''} ${isDashami ? 'ganesh-chaturthi' : ''}  ${isLakshmiPooja ? 'ganesh-chaturthi' : ''} ${isKarnatakaRajyotsava ? 'ganesh-chaturthi' : ''} ${isChristmas ? 'christmas' : ''}" data-date="${dateString}">
+                                    ${day}
+                                 </div>`;
+                calendarGrid.innerHTML += dayContent;
+            }
+
+            const dayElements = document.querySelectorAll('.day');
+            dayElements.forEach(dayElement => {
+                dayElement.addEventListener('click', () => {
+                    const date = dayElement.getAttribute('data-date');
+                    let message = `Date: ${date}`;
+
+                    if (isLeave(date)) {
+                        message = `Leave: ${date}`;
+                    } else if (isWeekend(date, saturdayCount)) {
+                        message = `Weekend: ${date}`;
+                    } else if (events[date]) {
+                        message = `${events[date].title} - ${date}`;
+                    }
+                    alert(message);
+                });
+            });
+
+            if (month === 4 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>1 May:</strong> Labour's Day</p>`;
+                notesContainer.style.display = 'none';
+            } else if (month === 7 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>9 August:</strong> Rakshabandhan</p>
+                                            <p><strong>15 August:</strong> Independence Day</p>
+                                            <p><strong>27 August:</strong> Ganesh Chaturthi</p>
+                                            <p><strong>28 August:</strong> Rushi Panchami</p>`;
+                notesContainer.style.display = 'block';
+            } else if (month === 8 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>30 September:</strong> Durga Ashtami</p>`;
+                notesContainer.style.display = 'none';
+            } else if (month === 9 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>1 October:</strong> Navami</p>
+                                            <p><strong>2 October:</strong> Dashami</p>
+                                            <p><strong>20 October:</strong> Lakshmi Pooja, Naraka Chaturdashi</p>`;
+                notesContainer.style.display = 'block';
+            } else if (month === 10 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>1 November:</strong> Karnataka Rajyotsava</p>`;
+                notesContainer.style.display = 'block';
+            } else if (month === 11 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>25 December:</strong> Christmas</p>`;
+                notesContainer.style.display = 'block';
+            } else {
+                notesContainer.style.display = 'none';
+            }
+        }
+
+        function isWeekend(dateString, saturdayCount) {
+            const date = new Date(dateString);
+            const day = date.getDay();
+            return day === 0 || (day === 6 && (saturdayCount === 2 || saturdayCount === 4));
+        }
+
+        function isLeave(dateString) {
+            const leaveDate = new Date(dateString);
+            const formattedDate = `${leaveDate.getFullYear()}-${String(leaveDate.getMonth() + 1).padStart(2, '0')}-${String(leaveDate.getDate()).padStart(2, '0')}`;
+            return leaves.includes(formattedDate);
+        }
+
+        function isToday(dateString) {
+            const today = new Date();
+            const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            return dateString === todayString;
+        }
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 4) {
+                currentMonth = 3;
+                currentYear = 2025;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > endMonth) {
+                currentMonth = endMonth;
+                currentYear = 2025;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        generateCalendar(currentMonth, currentYear);
+    </script>
+</body>
+</html>
