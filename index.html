@@ -14,7 +14,6 @@
             max-width: 600px;
             margin: 2rem auto;
             padding: 1.5rem;
-            /* Gradient background, shadow, and rounded corners */
             background: linear-gradient(135deg, #e0f2fe, #f0f4f8);
             border-radius: 1rem;
             box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.15), 0 3px 7px -2px rgba(0, 0, 0, 0.07);
@@ -94,9 +93,9 @@
             border-color: #f56565;
         }
         .day.leave {
-            background-color: #f56565;
+            background-color: #60a5fa;
             color: #ffffff;
-            border-color: #f56565;
+            border-color: #60a5fa;
             animation: pulse 2s infinite;
         }
         @keyframes pulse {
@@ -201,36 +200,32 @@
         const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         const weekends = [0];
-        const leaves = ['2025-05-01', '2025-08-15', '2025-08-27', '2025-08-28', '2025-09-30', '2025-10-01', '2025-10-02', '2025-10-20', '2025-11-01', '2025-12-25'];
-        const events = {
-            '2025-05-01': { title: 'Labour\'s Day' },
-            '2025-08-09': { title: 'Rakshabandhan'},
+        const holidays = {
+            '2025-04-18': { title: 'Good Friday' },
+            '2025-05-01': { title: 'May Day' },
             '2025-08-15': { title: 'Independence Day' },
-            '2025-08-27': { title: 'Ganesh Chaturthi' },
-            '2025-08-28': { title: 'Rushi Panchami' },
-            '2025-09-30': { title: 'Durga Ashtami' },
-            '2025-10-01': { title: 'Navami' },
-            '2025-10-02': { title: 'Dashami' },
-            '2025-10-20': { title: 'Lakshmi Pooja' },
-            '2025-11-01': { title: 'Karnataka Rajyotsava' },
+            '2025-08-27': { title: 'Vinayaka Chavithi' },
+            '2025-10-02': { title: 'Gandhi Jayanthi' },
+            '2025-10-03': { title: 'Vijaya Dasami' },
+            '2025-10-20': { title: 'Deepavali' },
+            '2025-10-21': { title: 'Deepavali' },
             '2025-12-25': { title: 'Christmas' }
         };
 
         function generateCalendar(month, year) {
             calendarGrid.innerHTML = `<div class="day-name">Sun</div>
-                                    <div class="day-name">Mon</div>
-                                    <div class="day-name">Tue</div>
-                                    <div class="day-name">Wed</div>
-                                    <div class="day-name">Thu</div>
-                                    <div class="day-name">Fri</div>
-                                    <div class="day-name">Sat</div>`;
+                                     <div class="day-name">Mon</div>
+                                     <div class="day-name">Tue</div>
+                                     <div class="day-name">Wed</div>
+                                     <div class="day-name">Thu</div>
+                                     <div class="day-name">Fri</div>
+                                     <div class="day-name">Sat</div>`;
 
             monthName.textContent = `${monthNames[month]} ${year}`;
             const firstDay = new Date(year, month, 1).getDay();
             const days = (month === 1 && (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0)) ? 29 : daysInMonth[month];
 
             let saturdayCount = 0;
-            let weekCount = 0;
             for (let i = 0; i < firstDay; i++) {
                 calendarGrid.innerHTML += `<div class="day"></div>`;
             }
@@ -238,29 +233,23 @@
             for (let day = 1; day <= days; day++) {
                 const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayOfWeek = new Date(dateString).getDay();
+                let isFirstOrThirdSaturday = false;
                 let isSecondOrFourthSaturday = false;
-                let isIndependenceDay = dateString === '2025-08-15';
-                let isGaneshChaturthi = dateString === '2025-08-27';
-                let isRushiPanchami = dateString === '2025-08-28';
-                let isRakshabandhan = dateString === '2025-08-09';
-                let isDurgaAshtami = dateString === '2025-09-30';
-                let isNavami = dateString === '2025-10-01';
-                let isDashami = dateString === '2025-10-02';
-                let isLakshmiPooja = dateString === '2025-10-20';
-                let isKarnatakaRajyotsava = dateString === '2025-11-01';
-                let isChristmas = dateString === '2025-12-25';
-
+                let isHoliday = holidays[dateString];
 
                 if (dayOfWeek === 6) {
                     saturdayCount++;
-                    if (saturdayCount === 2 || saturdayCount === 4) {
+                    if (saturdayCount === 1 || saturdayCount === 3) {
+                        isFirstOrThirdSaturday = true;
+                    }
+                    else if(saturdayCount === 2 || saturdayCount === 4){
                         isSecondOrFourthSaturday = true;
                     }
                 }
 
-                let dayContent = `<div class="day ${isSecondOrFourthSaturday || dayOfWeek === 0 ? 'weekend' : (dayOfWeek !== 0 ? 'workingday' : '')} ${isLeave(dateString) ? 'leave' : ''} ${isToday(dateString) ? 'today' : ''} ${isIndependenceDay ? 'independence-day' : ''} ${isGaneshChaturthi ? 'ganesh-chaturthi' : ''} ${isRushiPanchami ? 'ganesh-chaturthi' : ''} ${isRakshabandhan ? 'ganesh-chaturthi' : ''} ${isDurgaAshtami ? 'ganesh-chaturthi' : ''} ${isNavami ? 'ganesh-chaturthi': ''} ${isDashami ? 'ganesh-chaturthi' : ''}  ${isLakshmiPooja ? 'ganesh-chaturthi' : ''} ${isKarnatakaRajyotsava ? 'ganesh-chaturthi' : ''} ${isChristmas ? 'christmas' : ''}" data-date="${dateString}">
-                                    ${day}
-                                 </div>`;
+                let dayContent = `<div class="day ${isFirstOrThirdSaturday || dayOfWeek === 0 ? 'weekend' : (isSecondOrFourthSaturday ? 'workingday' : dayOfWeek !== 0 ? 'workingday' : '')} ${isHoliday ? 'leave' : ''} ${isToday(dateString) ? 'today' : ''}" data-date="${dateString}">
+                                        ${day}
+                                     </div>`;
                 calendarGrid.innerHTML += dayContent;
             }
 
@@ -269,37 +258,34 @@
                 dayElement.addEventListener('click', () => {
                     const date = dayElement.getAttribute('data-date');
                     let message = `Date: ${date}`;
+                    const dayObj = holidays[date];
 
                     if (isLeave(date)) {
                         message = `Leave: ${date}`;
                     } else if (isWeekend(date, saturdayCount)) {
                         message = `Weekend: ${date}`;
-                    } else if (events[date]) {
-                        message = `${events[date].title} - ${date}`;
+                    } else if (dayObj) {
+                        message = `${dayObj.title} - ${date}`;
                     }
                     alert(message);
                 });
             });
 
-            if (month === 4 && year === 2025) {
-                notesContainer.innerHTML = `<p><strong>1 May:</strong> Labour's Day</p>`;
+            if (month === 3 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>18 April:</strong> Good Friday</p>`;
+                notesContainer.style.display = 'block';
+            } else if (month === 4 && year === 2025) {
+                notesContainer.innerHTML = `<p><strong>1 May:</strong> May Day</p>`;
                 notesContainer.style.display = 'block';
             } else if (month === 7 && year === 2025) {
-                notesContainer.innerHTML = `<p><strong>9 August:</strong> Rakshabandhan</p>
-                                            <p><strong>15 August:</strong> Independence Day</p>
-                                            <p><strong>27 August:</strong> Ganesh Chaturthi</p>
-                                            <p><strong>28 August:</strong> Rushi Panchami</p>`;
-                notesContainer.style.display = 'block';
-            } else if (month === 8 && year === 2025) {
-                notesContainer.innerHTML = `<p><strong>30 September:</strong> Durga Ashtami</p>`;
+                notesContainer.innerHTML = `<p><strong>15 August:</strong> Independence Day</p>
+                                            <p><strong>27 August:</strong> Vinayaka Chavithi</p>`;
                 notesContainer.style.display = 'block';
             } else if (month === 9 && year === 2025) {
-                notesContainer.innerHTML = `<p><strong>1 October:</strong> Navami</p>
-                                            <p><strong>2 October:</strong> Dashami</p>
-                                            <p><strong>20 October:</strong> Lakshmi Pooja, Naraka Chaturdashi</p>`;
-                notesContainer.style.display = 'block';
-            } else if (month === 10 && year === 2025) {
-                notesContainer.innerHTML = `<p><strong>1 November:</strong> Karnataka Rajyotsava</p>`;
+                notesContainer.innerHTML = `<p><strong>2 October:</strong> Gandhi Jayanthi</p>
+                                            <p><strong>3 October:</strong> Vijaya Dasami</p>
+                                            <p><strong>20 October:</strong> Deepavali</p>
+                                            <p><strong>21 October:</strong> Deepavali</p>`;
                 notesContainer.style.display = 'block';
             } else if (month === 11 && year === 2025) {
                 notesContainer.innerHTML = `<p><strong>25 December:</strong> Christmas</p>`;
@@ -312,13 +298,27 @@
         function isWeekend(dateString, saturdayCount) {
             const date = new Date(dateString);
             const day = date.getDay();
-            return day === 0 || (day === 6 && (saturdayCount === 2 || saturdayCount === 4));
+            let saturdayNumber = 0;
+            const year = date.getFullYear();
+            const month = date.getMonth();
+             for (let i = 1; i <= new Date(year, month + 1, 0).getDate(); i++) {
+                const tempDate = new Date(year, month, i);
+                if (tempDate.getDay() === 6) {
+                    saturdayNumber++;
+                    const currentDateOfMonth = date.getDate();
+                    const tempDateOfMonth = tempDate.getDate();
+                    if (currentDateOfMonth === tempDateOfMonth) {
+                         return day === 0 || saturdayNumber === 1 || saturdayNumber === 3;
+                    }
+                }
+            }
+            return day === 0;
         }
 
         function isLeave(dateString) {
             const leaveDate = new Date(dateString);
             const formattedDate = `${leaveDate.getFullYear()}-${String(leaveDate.getMonth() + 1).padStart(2, '0')}-${String(leaveDate.getDate()).padStart(2, '0')}`;
-            return leaves.includes(formattedDate);
+            return holidays[formattedDate] !== undefined;
         }
 
         function isToday(dateString) {
@@ -329,7 +329,7 @@
 
         prevMonthBtn.addEventListener('click', () => {
             currentMonth--;
-            if (currentMonth < 4) {
+            if (currentMonth < 3) {
                 currentMonth = 3;
                 currentYear = 2025;
             }
